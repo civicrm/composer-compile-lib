@@ -14,6 +14,11 @@ $baseClass = Filesystem::class;
 $useClasses = [IOException::class, FileNotFoundException::class];
 $outFile = 'qnd-dynamic.php';
 
+$filterSignature = [];
+$filterSignature['copy'] = function ($sig) {
+    return str_replace('$overwriteNewerFiles = false', 'bool $overwriteNewerFiles = true', $sig);
+};
+
 ####################################################################################
 ## Utilities
 
@@ -43,7 +48,7 @@ $export = function ($v) {
  * @return string
  *   Ex: '$a, $b, $c = 100, $d = true'
  */
-$formatSignature = function ($params) use ($export) {
+$formatSignature = function ($name, $params) use ($export, $filterSignature) {
     $sigs = [];
     foreach ($params as $param) {
         /** @var \ReflectionParameter $param */
@@ -58,7 +63,12 @@ $formatSignature = function ($params) use ($export) {
 
         $sigs[] = $sig;
     }
-    return implode(', ', $sigs);
+    $sig = implode(', ', $sigs);
+
+    if ($filterSignature[$name]) {
+        $sig = call_user_func($filterSignature[$name], $sig);
+    }
+    return $sig;
 };
 
 /**
@@ -124,7 +134,7 @@ foreach ($c->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 
     printf("\n");
     printf("%s\n", $indent(-4, $method->getDocComment()));
-    printf("function %s(%s)\n", $method->getName(), $formatSignature($method->getParameters()));
+    printf("function %s(%s)\n", $method->getName(), $formatSignature($method->getName(), $method->getParameters()));
     printf("{\n");
     if (preg_match(';@return;', $method->getDocComment())) {
         printf("    return fs()->%s(%s);\n", $method->getName(), $formatPassthru($method->getParameters()));

@@ -91,7 +91,7 @@ function dumpFile($filename, $content);
 function mkdir($dirs, $mode = 511);
 function touch($files, $time = null, $atime = null);
 
-function copy($originFile, $targetFile, $overwriteNewerFiles = false);
+function copy($originFile, $targetFile, $overwriteNewerFiles = true);
 function mirror($originDir, $targetDir, $iterator = null, $options = []);
 function remove($files);
 function rename($origin, $target, $overwrite = false);
