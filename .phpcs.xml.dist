@@ -5,7 +5,9 @@
   <file>src</file>
   <file>tests</file>
 
-  <rule ref="PSR12"/>
+  <rule ref="PSR12">
+    <exclude-pattern>*.css</exclude-pattern>
+  </rule>
   
   <rule ref="Generic.Files.LineLength">
     <properties>
