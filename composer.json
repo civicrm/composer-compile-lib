@@ -1,0 +1,37 @@
+{
+    "name": "totten/qnd",
+    "description": "Quick-and-dirty compile tasks",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tim Otten",
+            "email": "totten@civicrm.org"
+        }
+    ],
+    "autoload": {
+      "files": ["qnd.php"],
+      "psr-4": {
+        "Qnd\\": ["src/"]
+      }
+    },
+    "config": {
+        "platform": {
+            "php": "7.1"
+        }
+    },
+    "require": {
+        "civicrm/composer-compile-plugin": "~0.9 || ~1.0",
+        "symfony/filesystem": "~2.8 || ~3.4 || ~4.0 || ~5.0",
+        "scssphp/scssphp": "~1.2",
+        "padaliyajay/php-autoprefixer": "~1.2"
+    },
+    "extra": {
+        "compile": [
+            {
+                "run": ["@php-script src/FsStubsTpl.php"],
+                "watch-files": ["src/FsStubsTpl.php"],
+                "-qnd-task": true
+            }
+        ]
+    }
+}

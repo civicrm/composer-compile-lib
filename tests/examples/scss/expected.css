@@ -1,0 +1,11 @@
+
+html {
+    color: red;
+}
+
+div .foo {
+        -ms-hyphens: auto;
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        hyphens: auto;
+}

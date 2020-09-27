@@ -1,0 +1,10 @@
+{
+  "namespace": "Example\\Deli",
+  "class": "Sandwich",
+  "fields": {
+    "cheeses": "string[]",
+    "veggies": "string[]",
+    "bread": "string",
+    "toasted": "bool"
+  }
+}
