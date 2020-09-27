@@ -1,6 +1,8 @@
 <?php
 namespace Qnd\Tasks;
 
+use tubalmartin\CssMin\Minifier;
+
 class Scss
 {
 
@@ -22,6 +24,8 @@ class Scss
             $scssCompiler->addImportPath($include);
         }
 
+        $minifier = new Minifier();
+
         if (empty($task['scss-files'])) {
             throw new \InvalidArgumentException("Invalid task: required argument 'scss-files' is missing");
         }
@@ -36,10 +40,13 @@ class Scss
             if (!file_exists(dirname($outputFile))) {
                 mkdir(dirname($outputFile), 0777, true);
             }
+
             $outputCss = $autoprefixer->compile();
-            if (!file_put_contents($outputFile, $outputCss)) {
-                throw new \RuntimeException("Failed to write file: $outputFile");
-            }
+            \Qnd\dumpFile($outputFile, $outputCss);
+
+            $outputMinCssFile = preg_replace(';\.css$;', '.min.css', $outputFile);
+            $outputMinCss = $minifier->run($outputCss);
+            \Qnd\dumpFile($outputMinCssFile, $outputMinCss);
         }
     }
 }
