@@ -1,6 +1,7 @@
 <?php
 namespace Qnd\Tasks;
 
+use Qnd\ScssCompiler;
 use tubalmartin\CssMin\Minifier;
 
 class Scss
@@ -11,17 +12,23 @@ class Scss
      *
      * @param array $task
      *   With keys:
-     *   - scss-includes: string[], list of paths with SCSS helper files
+     *   - scss-imports: string[], list of paths with SCSS helper files
+     *   - scss-import-prefixes: array, key-value mapping where keys are "logical file prefixes" and values are file-paths
+     *   - scss-includes: string[], an alias for 'scss-imports'
      *   - scss-files: array, key-value mapping with input-files and output-files
      *
      * @link https://github.com/civicrm/composer-compile-plugin/blob/master/doc/tasks.md
      */
     public static function compile(array $task)
     {
-        $scssCompiler = new \ScssPhp\ScssPhp\Compiler();
-        $includes = $task['scss-includes'] ?? $task['scss-imports'] ?? [];
+        $scssCompiler = new ScssCompiler();
+        $includes = $task['scss-imports'] ?? $task['scss-includes'] ?? [];
         foreach ($includes as $include) {
             $scssCompiler->addImportPath($include);
+        }
+        $prefixes = $task['scss-import-prefixes'] ?? [];
+        foreach ($prefixes as $prefix => $path) {
+            $scssCompiler->addImportPrefix($prefix, $path);
         }
 
         $minifier = new Minifier();

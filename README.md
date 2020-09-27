@@ -120,7 +120,8 @@ function tempnam($dir, $prefix);
         "run": "@php-method \\Qnd\\Task::scss",
         "watch-files": ["scss"],
         "scss-files": {"scss/whizbang.scss": "dist/whizbang.css"},
-        "scss-includes": ["scss"]
+        "scss-imports": ["scss"]
+        "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder"}
       }
     ]
   }
