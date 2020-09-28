@@ -29,6 +29,7 @@
     "extra": {
         "compile": [
             {
+                "title": "Generate <comment>Qnd</comment> convenience wrappers for <comment>symfony/filesystem</comment>",
                 "run": ["@php-script src/FsStubsTpl.php"],
                 "watch-files": ["src/FsStubsTpl.php"],
                 "-qnd-task": true
