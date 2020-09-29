@@ -6,7 +6,7 @@
  * class: string
  * fields: array (string $fieldName => string $type)
  */
-namespace Qnd\Tests\Examples;
+namespace CCL\Tests\Examples;
 
 $funcName = function ($action, $fieldName) {
     return $action . ucfirst($fieldName);

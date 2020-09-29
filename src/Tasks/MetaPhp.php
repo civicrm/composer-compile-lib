@@ -1,5 +1,5 @@
 <?php
-namespace Qnd\Tasks;
+namespace CCL\Tasks;
 
 class MetaPhp
 {
@@ -29,7 +29,7 @@ class MetaPhp
         ob_end_clean();
         $metaphp = null;
 
-        \Qnd\dumpFile($task['metaphp-out'], $outputPhp);
+        \CCL\dumpFile($task['metaphp-out'], $outputPhp);
     }
 
     /**

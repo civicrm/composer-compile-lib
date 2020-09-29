@@ -1,21 +1,21 @@
 <?php
-namespace Qnd\Tests;
+namespace CCL\Tests;
 
 class ScssTest extends \PHPUnit\Framework\TestCase
 {
     public function testScss()
     {
-        \Qnd\remove($this->exampleDir('output.css'));
-        \Qnd\Tasks::scss([
+        \CCL\remove($this->exampleDir('output.css'));
+        \CCL\Tasks::scss([
             'scss-files' => [$this->exampleDir('main.scss') => $this->exampleDir('output.css')],
             'scss-imports' => ['tests/examples/scss'],
         ]);
 
         $this->assertTrue(file_exists($this->exampleDir('output.css')));
 
-        $actual = \Qnd\cat($this->exampleDir('output.css'));
-        $actualMin = \Qnd\cat($this->exampleDir('output.min.css'));
-        $expected = \Qnd\cat($this->exampleDir('expected.css'));
+        $actual = \CCL\cat($this->exampleDir('output.css'));
+        $actualMin = \CCL\cat($this->exampleDir('output.min.css'));
+        $expected = \CCL\cat($this->exampleDir('expected.css'));
 
         $normalize = function ($css) {
             return trim(preg_replace(';\s+;', ' ', $css));

@@ -1,10 +1,10 @@
 <?php
-namespace Qnd;
+namespace CCL;
 
 use Symfony\Component\Filesystem\Exception\IOException;
 
-if (!isset($GLOBALS['COMPOSER_COMPILE_TASK']) || empty($GLOBALS['COMPOSER_COMPILE_TASK']['-qnd-task'])) {
-    include_once __DIR__ . '/qnd-dynamic.php';
+if (!isset($GLOBALS['COMPOSER_COMPILE_TASK']) || empty($GLOBALS['COMPOSER_COMPILE_TASK']['-ccl-task'])) {
+    include_once __DIR__ . '/compile-lib-fs.php';
 }
 
 function chdir($directory)
@@ -72,7 +72,7 @@ function cat($srcs, $newLine = 'auto') {
 // * @throws IOException if the file cannot be written to
 // */
 //function write($file, $content) {
-//    \Qnd\dumpFile($file, $content);
+//    \CCL\dumpFile($file, $content);
 //}
 
 ///**

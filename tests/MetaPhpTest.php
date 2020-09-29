@@ -1,13 +1,13 @@
 <?php
-namespace Qnd\Tests;
+namespace CCL\Tests;
 
 class MetaPhpTest extends \PHPUnit\Framework\TestCase
 {
     public function testSandwich()
     {
-        \Qnd\remove($this->exampleDir('Sandwich.php'));
+        \CCL\remove($this->exampleDir('Sandwich.php'));
         $this->assertFalse(class_exists('\Example\Deli\Sandwich'));
-        \Qnd\Tasks::metaphp([
+        \CCL\Tasks::metaphp([
             'metaphp-tpl' => $this->exampleDir('EntityTemplate.php'),
             'metaphp-data' => $this->exampleDir('Sandwich.json'),
             'metaphp-out' => $this->exampleDir('Sandwich.php')

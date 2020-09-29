@@ -12,24 +12,24 @@ Some general values for this repo:
    the PHP namespace to allow co-existence.
 5. I'm not too likely to make/accept breaking changes. See (4) above.
 
-All the examples below require the `totten/qnd` package.
+All the examples below require the `civicrm/composer-compile-lib` package.
 
 ```javascript
   "require": {
-    "totten/qnd": "~1.0"
+    "civicrm/composer-compile-lib": "~1.0"
   }
 ```
 
 ## Functions
 
-PHP's standard library has a lot of functions that would work for improvised scripts (`copy()`, `rename()`, `chdir()`, etc).  The problem
-is error-reporting -- you have to explicitly check error-output, and this grows cumbersome with improvised glue code.  It's more convenient
-to have a default 'stop-on-error' behavior, e.g.  throwing exceptions.
+PHP's standard library has a lot of functions that would work for basic file manipulation (`copy()`, `rename()`, `chdir()`, etc).  The
+problem is error-signaling -- you have to explicitly check error-output, and this grows cumbersome with improvised glue code.  It's more
+convenient to have a default 'stop-on-error' behavior, e.g.  throwing exceptions.
 
 [symfony/filesystem](https://symfony.com/doc/current/components/filesystem.html) provides wrappers which throw exceptions.
 But it puts them into a class `Filesystem` which, which requires more boilerplate.
 
-For the most part, `Qnd` simply mirrors `symfony/filesystem` using standalone functions in the `Qnd` namespace. Compare:
+For the most part, `CCL` simply mirrors `symfony/filesystem` using standalone functions in the `CCL` namespace. Compare:
 
 ```php
 // PHP Standard Library
@@ -42,7 +42,7 @@ $fs = new \Symfony\Component\Filesystem\Filesystem();
 $fs->copy('old', 'new');
 
 // Quick and dirty
-\Qnd\copy('old', 'new');
+\CCL\copy('old', 'new');
 ```
 
 This is more convenient for scripting one-liners - for example, these tasks do simple file operations. If anything
@@ -56,16 +56,16 @@ goes wrong, they raise an exception and stop the compilation process.
         "title": "Smorgasboard of random helpers",
         "run": [
           // Create files and folders
-          "@php-eval \\Qnd\\dumpFile('dist/timestamp.txt', date('Y-m-d H:i:s'));",
-          "@php-eval \\Qnd\\mkdir('some/other/place');",
+          "@php-eval \\CCL\\dumpFile('dist/timestamp.txt', date('Y-m-d H:i:s'));",
+          "@php-eval \\CCL\\mkdir('some/other/place');",
 
           // Concatenate a few files
-          "@php-eval \\Qnd\\dumpFile('dist/bundle.js', \\Qnd\\cat(glob('js/*.js'));",
-          "@php-eval \\Qnd\\chdir('css'); \\Qnd\\dumpFile('all.css', ['colors.css', 'layouts.css']);",
+          "@php-eval \\CCL\\dumpFile('dist/bundle.js', \\CCL\\cat(glob('js/*.js'));",
+          "@php-eval \\CCL\\chdir('css'); \\CCL\\dumpFile('all.css', ['colors.css', 'layouts.css']);",
 
           // If you need reference material from another package...
           "@export TWBS={{pkg:twbs/bootstrap}}",
-          "@php-eval \\Qnd\\copy(getenv('TWBS') .'/dist/bootstrap.css', 'web/main.css')"
+          "@php-eval \\CCL\\copy(getenv('TWBS') .'/dist/bootstrap.css', 'web/main.css')"
         ]
       }
     ]
@@ -76,9 +76,9 @@ goes wrong, they raise an exception and stop the compilation process.
 The full function list:
 
 ```php
-namespace Qnd;
+namespace CCL;
 
-// Qnd wrappers
+// CCL wrappers
 
 function chdir(string $dir);
 function glob($pat, $flags = null);
@@ -117,7 +117,7 @@ function tempnam($dir, $prefix);
     "compile": [
       {
         "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
-        "run": "@php-method \\Qnd\\Task::scss",
+        "run": "@php-method \\CCL\\Task::scss",
         "watch-files": ["scss"],
         "scss-files": {"scss/whizbang.scss": "dist/whizbang.css"},
         "scss-imports": ["scss"]
@@ -136,7 +136,7 @@ function tempnam($dir, $prefix);
     "compile": [
       {
         "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
-        "run": "@php-method \\Qnd\\Task::metaphp",
+        "run": "@php-method \\CCL\\Task::metaphp",
         "watch-files": ["src/tpl"],
         "metaphp-tpl": "src/tpl/class.php",
         "metaphp-data": "src/tpl/Sandwich.json",

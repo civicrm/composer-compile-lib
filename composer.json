@@ -1,17 +1,17 @@
 {
-    "name": "totten/qnd",
-    "description": "Quick-and-dirty compile tasks",
+    "name": "civicrm/composer-compile-lib",
+    "description": "Small library of compilation helpers",
     "license": "MIT",
     "authors": [
         {
-            "name": "Tim Otten",
-            "email": "totten@civicrm.org"
+            "name": "CiviCRM",
+            "email": "info@civicrm.org"
         }
     ],
     "autoload": {
-      "files": ["qnd.php"],
+      "files": ["compile-lib.php"],
       "psr-4": {
-        "Qnd\\": ["src/"]
+        "CCL\\": ["src/"]
       }
     },
     "config": {
@@ -29,10 +29,10 @@
     "extra": {
         "compile": [
             {
-                "title": "Generate <comment>Qnd</comment> convenience wrappers for <comment>symfony/filesystem</comment>",
+                "title": "Generate <comment>CCL</comment> convenience wrappers for <comment>symfony/filesystem</comment>",
                 "run": ["@php-script src/FsStubsTpl.php"],
                 "watch-files": ["src/FsStubsTpl.php"],
-                "-qnd-task": true
+                "-ccl-task": true
             }
         ]
     }

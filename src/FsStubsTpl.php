@@ -1,18 +1,18 @@
 <?php
 /**
- * For every class-method in Symfony Filesystem, make a function in Qnd namespace.
- * Write the result to 'qnd-dynamic.php'.
+ * For every class-method in Symfony Filesystem, make a function in CCL namespace.
+ * Write the result to a PHP file.
  */
-namespace Qnd\FsStubsTpl;
+namespace CCL\FsStubsTpl;
 
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
-$namespace = 'Qnd';
+$namespace = 'CCL';
 $baseClass = Filesystem::class;
 $useClasses = [IOException::class, FileNotFoundException::class];
-$outFile = 'qnd-dynamic.php';
+$outFile = 'compile-lib-fs.php';
 
 $filterSignature = [];
 $filterSignature['copy'] = function ($sig) {

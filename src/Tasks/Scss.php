@@ -1,7 +1,7 @@
 <?php
-namespace Qnd\Tasks;
+namespace CCL\Tasks;
 
-use Qnd\ScssCompiler;
+use CCL\ScssCompiler;
 use tubalmartin\CssMin\Minifier;
 
 class Scss
@@ -49,11 +49,11 @@ class Scss
             }
 
             $outputCss = $autoprefixer->compile();
-            \Qnd\dumpFile($outputFile, $outputCss);
+            \CCL\dumpFile($outputFile, $outputCss);
 
             $outputMinCssFile = preg_replace(';\.css$;', '.min.css', $outputFile);
             $outputMinCss = $minifier->run($outputCss);
-            \Qnd\dumpFile($outputMinCssFile, $outputMinCss);
+            \CCL\dumpFile($outputMinCssFile, $outputMinCss);
         }
     }
 }

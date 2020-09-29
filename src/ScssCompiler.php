@@ -1,5 +1,5 @@
 <?php
-namespace Qnd;
+namespace CCL;
 
 class ScssCompiler extends \ScssPhp\ScssPhp\Compiler
 {
