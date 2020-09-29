@@ -30,14 +30,16 @@ $filterSignature['copy'] = function ($sig) {
  */
 $export = function ($v) {
     switch ($v) {
-        case null:
-        case true:
-        case false:
-            return strtolower(var_export($v, 1));
+        case NULL:
+        case TRUE:
+        case FALSE:
+          return strtolower(var_export($v, 1));
+
         case []:
-            return '[]';
+          return '[]';
+
         default:
-            return var_export($v, 1);
+          return var_export($v, 1);
     }
 };
 
@@ -51,7 +53,8 @@ $export = function ($v) {
 $formatSignature = function ($name, $params) use ($export, $filterSignature) {
     $sigs = [];
     foreach ($params as $param) {
-        /** @var \ReflectionParameter $param */
+        /**
+ * @var \ReflectionParameter $param */
         // Note: we don't formally constrain parameter types in here, because that
         // yields a more stable signature across diff versions of Symfony Filesystem.
         $sig = '';
@@ -78,7 +81,8 @@ $formatSignature = function ($name, $params) use ($export, $filterSignature) {
 $formatPassthru = function ($params) {
     $passthrus = [];
     foreach ($params as $param) {
-        /** @var \ReflectionParameter $param */
+        /**
+ * @var \ReflectionParameter $param */
         $passthrus[] = '$' . $param->getName();
     }
     return implode(', ', $passthrus);
@@ -130,7 +134,9 @@ printf("}\n");
 
 $c = new \ReflectionClass($baseClass);
 foreach ($c->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-    /** @var \ReflectionMethod $method */
+    /**
+     * @var \ReflectionMethod $method
+     */
 
     printf("\n");
     printf("%s\n", $indent(-4, $method->getDocComment()));

@@ -4,14 +4,13 @@ namespace CCL;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 if (!isset($GLOBALS['COMPOSER_COMPILE_TASK']) || empty($GLOBALS['COMPOSER_COMPILE_TASK']['-ccl-task'])) {
-    include_once __DIR__ . '/compile-lib-fs.php';
+  include_once __DIR__ . '/compile-lib-fs.php';
 }
 
-function chdir($directory)
-{
-    if (!\chdir($directory)) {
-        throw new IOException("Failed to change directory ($directory)");
-    }
+function chdir($directory) {
+  if (!\chdir($directory)) {
+    throw new IOException("Failed to change directory ($directory)");
+  }
 }
 
 /**
@@ -21,14 +20,14 @@ function chdir($directory)
  * @return array
  *   List of matching files.
  */
-function glob($pats, $flags = null) {
-    $r = [];
-    $pats = (array) $pats;
-    foreach ($pats as $pat) {
-        $r = array_unique(array_merge($r, (array) \glob($pat, $flags)));
-    }
-    sort($r);
-    return $r;
+function glob($pats, $flags = NULL) {
+  $r = [];
+  $pats = (array) $pats;
+  foreach ($pats as $pat) {
+    $r = array_unique(array_merge($r, (array) \glob($pat, $flags)));
+  }
+  sort($r);
+  return $r;
 }
 
 /**
@@ -43,24 +42,25 @@ function glob($pats, $flags = null) {
  *   The result of joining the files.
  */
 function cat($srcs, $newLine = 'auto') {
-    $buf = '';
-    foreach (glob($srcs) as $file) {
-        if (!is_readable($file)) {
-            throw new \RuntimeException("Cannot read $file");
-        }
-        $buf .= file_get_contents($file);
-        switch ($newLine) {
-            case 'auto':
-                if (substr($buf, -1) !== "\n") {
-                    $buf .= "\n";
-                }
-                break;
-            case 'raw':
-                // Don't
-                break;
-        }
+  $buf = '';
+  foreach (glob($srcs) as $file) {
+    if (!is_readable($file)) {
+      throw new \RuntimeException("Cannot read $file");
     }
-    return $buf;
+    $buf .= file_get_contents($file);
+    switch ($newLine) {
+      case 'auto':
+        if (substr($buf, -1) !== "\n") {
+          $buf .= "\n";
+        }
+        break;
+
+      case 'raw':
+        // Don't
+        break;
+    }
+  }
+  return $buf;
 }
 
 ///**
