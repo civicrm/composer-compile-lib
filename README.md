@@ -1,16 +1,15 @@
-# Quick and dirty PHP compilation tasks
+# CiviCRM Compilation Library
 
-This is a quick-and-dirty library with some example tasks for [composer-compile-plugin](https://github.com/civicrm/composer-compile-plugin).
-This package does not aim to be particularly deep or powerful.
+This is a quick-and-dirty library with some example tasks and helpers for [composer-compile-plugin](https://github.com/civicrm/composer-compile-plugin).
 
 Some general values for this repo:
 
-1. Use basic functions and static Methods to allow easy operation in pre-boot environments.
-2. Every task must throw an error if it doesn't work.
-3. If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
-4. If you need something different, then feel free to copy, hack, etc. If you republish/rename, it's best to change
-   the PHP namespace to allow co-existence.
-5. I'm not too likely to make/accept breaking changes. See (4) above.
+* Use basic functions and static methods to allow easy operation in pre-boot environments.
+* Every task/helper must throw an exception if it doesn't work.
+* If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
+* Feel free to copy/hack/etc. If you re-publish, please use a different name+namespace to allow coexistence.
+
+## Require the library
 
 All the examples below require the `civicrm/composer-compile-lib` package.
 
@@ -19,6 +18,44 @@ All the examples below require the `civicrm/composer-compile-lib` package.
     "civicrm/composer-compile-lib": "~1.0"
   }
 ```
+
+## Task: SCSS
+
+```javascript
+{
+  "extra": {
+    "compile": [
+      {
+        "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
+        "run": "@php-method \\CCL\\Task::scss",
+        "watch-files": ["scss"],
+        "scss-files": {"scss/whizbang.scss": "dist/whizbang.css"},
+        "scss-imports": ["scss"]
+        "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder"}
+      }
+    ]
+  }
+}
+```
+
+## Task: Meta-PHP
+
+```javascript
+{
+  "extra": {
+    "compile": [
+      {
+        "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
+        "run": "@php-method \\CCL\\Task::metaphp",
+        "watch-files": ["src/tpl"],
+        "metaphp-tpl": "src/tpl/class.php",
+        "metaphp-data": "src/tpl/Sandwich.json",
+        "metaphp-out": "src/Sandwich.php"
+      }
+    ]
+  }
+}
+
 
 ## Functions
 
@@ -107,42 +144,4 @@ function symlink($originDir, $targetDir, $copyOnWindows = false);
 function exists($files);
 
 function tempnam($dir, $prefix);
-```
-
-## Task: SCSS
-
-```javascript
-{
-  "extra": {
-    "compile": [
-      {
-        "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
-        "run": "@php-method \\CCL\\Task::scss",
-        "watch-files": ["scss"],
-        "scss-files": {"scss/whizbang.scss": "dist/whizbang.css"},
-        "scss-imports": ["scss"]
-        "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder"}
-      }
-    ]
-  }
-}
-```
-
-## Task: Meta-PHP
-
-```javascript
-{
-  "extra": {
-    "compile": [
-      {
-        "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
-        "run": "@php-method \\CCL\\Task::metaphp",
-        "watch-files": ["src/tpl"],
-        "metaphp-tpl": "src/tpl/class.php",
-        "metaphp-data": "src/tpl/Sandwich.json",
-        "metaphp-out": "src/Sandwich.php"
-      }
-    ]
-  }
-}
 ```
