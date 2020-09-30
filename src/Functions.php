@@ -4,6 +4,16 @@ namespace CCL;
 class Functions {
 
   /**
+   * Assert that we are properly executing within the context of a compilation task.
+   *
+   * If this script tries to run in any other context, then you will get some
+   * kind of error (e.g. class not found or RuntimeException).
+   */
+  public function assertTask() {
+    \Civi\CompilePlugin\Util\Script::assertTask();
+  }
+
+  /**
    * Array-map function. Similar to array_map(), but tuned to key-value pairs.
    *
    * Example:
