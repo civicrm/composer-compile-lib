@@ -1,7 +1,11 @@
 <?php
 /**
- * For every class-method in Symfony Filesystem, make a function in CCL namespace.
+ * For every class-method in Symfony `Filesystem` and CCL `Functions`, make a function in CCL namespace.
  * Write the result to a PHP file.
+ *
+ * NOTE: It's a bit annoying that PHP supports auto-loading of classes but not of functions; this means that
+ * namespaced functions have to be parsed fully (even if they're not going to be used). But if it's
+ * any consolation, we only load the 1-line wrappers.
  */
 namespace CCL\FsStubsTpl;
 
@@ -10,10 +14,10 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 $namespace = 'CCL';
-$baseClass = Filesystem::class;
+$baseClasses = [Filesystem::class => '_sym', \CCL\Functions::class => '_ccl'];
 $useClasses = [IOException::class, FileNotFoundException::class];
 $skipMethods = ['handleError'];
-$outFile = 'compile-lib-fs.php';
+$outFile = 'stubs-dynamic.php';
 
 $filterSignature = [];
 $filterSignature['copy'] = function ($sig) {
@@ -30,6 +34,9 @@ $filterSignature['copy'] = function ($sig) {
  * @return string
  */
 $export = function ($v) {
+  if ($v === TRUE || $v === FALSE || $v === NULL) {
+    return strtoupper(var_export($v, 1));
+  }
   if ($v === []) {
     return '[]';
   }
@@ -130,33 +137,40 @@ printf("\n");
 foreach ($useClasses as $useClass) {
     printf("use %s;\n", $useClass);
 }
-printf("\n");
-printf("%s", $formatDocBlock("@return $baseClass"));
-printf("function fs() {\n");
-printf("  static \$singleton = NULL;\n");
-printf("  \$singleton = \$singleton ?: new \\%s();\n", $baseClass);
-printf("  return \$singleton;\n");
-printf("}\n");
 
-$c = new \ReflectionClass($baseClass);
-foreach ($c->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-  /**
-   * @var \ReflectionMethod $method
-   */
-
-  if (in_array($method->getName(), $skipMethods)) {
-    continue;
-  }
-
+foreach ($baseClasses as $baseClass => $singletonFunc) {
   printf("\n");
-  printf("%s\n", $indent(-4, $method->getDocComment()));
-  printf("function %s(%s) {\n", $method->getName(), $formatSignature($method->getName(), $method->getParameters()));
-  if (preg_match(';@return;', $method->getDocComment())) {
-    printf("  return fs()->%s(%s);\n", $method->getName(), $formatPassthru($method->getParameters()));
-  } else {
-    printf("  fs()->%s(%s);\n", $method->getName(), $formatPassthru($method->getParameters()));
-  }
+  printf("%s", $formatDocBlock("@return $baseClass"));
+  printf("function %s() {\n", $singletonFunc);
+  printf("  static \$singleton = NULL;\n");
+  printf("  \$singleton = \$singleton ?: new \\%s();\n", $baseClass);
+  printf("  return \$singleton;\n");
   printf("}\n");
+}
+
+foreach ($baseClasses as $baseClass => $singletonFunc) {
+  $c = new \ReflectionClass($baseClass);
+  foreach ($c->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+    /**
+     * @var \ReflectionMethod $method
+     */
+
+    if (in_array($method->getName(), $skipMethods)) {
+      continue;
+    }
+
+    preg_match(';\n( +);m', $method->getDocComment(), $oldDocSpaces);
+
+    printf("\n");
+    printf("%s\n", $indent(1 - strlen($oldDocSpaces[1] ?? ''), $method->getDocComment()));
+    printf("function %s(%s) {\n", $method->getName(), $formatSignature($method->getName(), $method->getParameters()));
+    if (preg_match(';@return;', $method->getDocComment())) {
+      printf("  return %s()->%s(%s);\n", $singletonFunc, $method->getName(), $formatPassthru($method->getParameters()));
+    } else {
+      printf("  %s()->%s(%s);\n", $singletonFunc, $method->getName(), $formatPassthru($method->getParameters()));
+    }
+    printf("}\n");
+  }
 }
 
 $code = ob_get_contents();

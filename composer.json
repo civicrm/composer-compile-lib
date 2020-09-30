@@ -9,7 +9,7 @@
         }
     ],
     "autoload": {
-      "files": ["compile-lib.php"],
+      "files": ["stubs-loader.php"],
       "psr-4": {
         "CCL\\": ["src/"]
       }
@@ -29,9 +29,9 @@
     "extra": {
         "compile": [
             {
-                "title": "Generate <comment>CCL</comment> convenience wrappers for <comment>symfony/filesystem</comment>",
-                "run": ["@php-script src/FsStubsTpl.php"],
-                "watch-files": ["src/FsStubsTpl.php"],
+                "title": "Generate <comment>CCL</comment> wrapper functions",
+                "run": ["@php-script src/StubsTpl.php"],
+                "watch-files": ["src/StubsTpl.php", "stubs-loader.php"],
                 "-ccl-task": true
             }
         ]
