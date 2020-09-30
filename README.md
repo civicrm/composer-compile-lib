@@ -42,7 +42,7 @@ variables from the `./scss/` folder.
   "extra": {
     "compile": [
       {
-        "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
+        "title": "Prepare CSS (<comment>sandwich.css</comment>, <comment>salad.css</comment>)",
         "run": "@php-method \\CCL\\Tasks::scss",
         "watch-files": ["scss"],
         "scss-files": {
@@ -58,10 +58,25 @@ variables from the `./scss/` folder.
 ```
 
 Note that a "task" simply calls a static PHP method (`@php-method \\CCL\\Tasks::scss`) with the JSON data as input.  You
-can also call the method directly.  For example, in this PHP script, we scan the file list (`globMap(...)`) and feed
-that into `scss()`.
+can also call the method in a PHP script. For example, we could define a task based on a script:
+
+```javascript{
+  "extra": {
+    "compile": [
+      {
+        "title": "Prepare CSS (<comment>sandwich.css</comment>, <comment>salad.css</comment>)",
+        "run": "@php-script bin/compile-scss"
+      }
+    ]
+  }
+}
+```
+
+The script makes a list of SCSS/CSS files (`globMap(...)`) and passes that to `\CCL\Tasks::scss(...)`:
 
 ```php
+\CCL\assertTask();
+
 $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
 \CCL\Tasks::scss([
   'scss-files' => $files,
@@ -73,7 +88,7 @@ $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
 ## Task: PHP Template
 
 In this example, we use a PHP template (eg [`src/Entity/EntityTemplate.php`](tests/examples/EntityTemplate.php)) to generate a PHP class.
-Specifically, the `Sandwich.php` entity will be generated from the [`Sandwich.json`](tests/examples/Sandwich.json) specification.
+Specifically, the `Sandwich.php` class will be generated from the [`Sandwich.json`](tests/examples/Sandwich.json) specification.
 
 ```javascript
 {
@@ -98,7 +113,7 @@ It loads the `tpl-file` (`EntityTemplate.php`) and supplies one input (e.g. `$tp
 The result is written to `src/Entity/Sandwich.php`.
 
 As in the previous example, the task is simply a PHP method (`@php-method \\CCL\\Tasks::template`), so it can be used
-from a PHP script.  This example maps JSON files (`src/Entity/*.json`) to PHP files (`src/Entity/#1.php`):
+from a PHP script.  This script maps JSON files (`src/Entity/*.json`) to PHP files (`src/Entity/#1.php`):
 
 ```php
 $files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
@@ -170,10 +185,10 @@ namespace CCL;
 
 function chdir(string $dir);
 function glob($pat, $flags = null);
-function cat($files);
 
 // CCL distinct functions
 
+function cat($files);
 function mapkv($array, $func);
 function globMap($globPat, $mapPat, $flip = false);
 
