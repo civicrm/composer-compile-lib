@@ -26,7 +26,7 @@ class Template {
       require $task['tpl-file'];
       $outputContent = ob_get_contents();
       ob_end_clean();
-      \CCL\dumpFile($outputFile, $outputContent);
+      \CCL::dumpFile($outputFile, $outputContent);
     }
 
     $tplData = $backup;

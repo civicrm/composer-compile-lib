@@ -4,7 +4,7 @@ namespace CCL\Tests;
 class TemplateTest extends \PHPUnit\Framework\TestCase {
 
   public function testSandwich() {
-    \CCL\remove($this->exampleDir('Sandwich.php'));
+    \CCL::remove($this->exampleDir('Sandwich.php'));
     $this->assertFalse(class_exists('\Example\Deli\Sandwich'));
     \CCL\Tasks::template([
       'tpl-file' => $this->exampleDir('EntityTemplate.php'),

@@ -48,11 +48,11 @@ class Scss {
       }
 
       $outputCss = $autoprefixer->compile();
-      \CCL\dumpFile($outputFile, $outputCss);
+      \CCL::dumpFile($outputFile, $outputCss);
 
       $outputMinCssFile = preg_replace(';\.css$;', '.min.css', $outputFile);
       $outputMinCss = $minifier->run($outputCss);
-      \CCL\dumpFile($outputMinCssFile, $outputMinCss);
+      \CCL::dumpFile($outputMinCssFile, $outputMinCss);
     }
   }
 

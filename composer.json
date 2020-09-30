@@ -9,7 +9,9 @@
         }
     ],
     "autoload": {
-      "files": ["stubs-loader.php"],
+      "psr-0": {
+        "CCL": ""
+      },
       "psr-4": {
         "CCL\\": ["src/"]
       }
@@ -31,7 +33,7 @@
             {
                 "title": "Generate <comment>CCL</comment> wrapper functions",
                 "run": ["@php-script src/StubsTpl.php"],
-                "watch-files": ["src/StubsTpl.php", "src/Functions.php", "stubs-loader.php"]
+                "watch-files": ["src/StubsTpl.php", "src/Functions.php"]
             }
         ]
     }

@@ -4,7 +4,7 @@ namespace CCL\Tests;
 class ScssTest extends \PHPUnit\Framework\TestCase {
 
   public function testScss() {
-    \CCL\remove($this->exampleDir('output.css'));
+    \CCL::remove($this->exampleDir('output.css'));
     \CCL\Tasks::scss([
       'scss-files' => [$this->exampleDir('output.css') => $this->exampleDir('main.scss')],
       'scss-imports' => ['tests/examples/scss'],
@@ -17,9 +17,9 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testScssGlobMap() {
-    \CCL\remove($this->exampleDir('output.css'));
+    \CCL::remove($this->exampleDir('output.css'));
     \CCL\Tasks::scss([
-      'scss-files' => \CCL\globMap($this->exampleDir('*.scss'), $this->exampleDir('dist/#1.css'), 1),
+      'scss-files' => \CCL::globMap($this->exampleDir('*.scss'), $this->exampleDir('dist/#1.css'), 1),
       'scss-imports' => ['tests/examples/scss'],
       'scss-import-prefixes' => ['EXTRA/' => dirname($this->exampleDir()) . '/scss-extra/'],
     ]);
@@ -43,8 +43,8 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
     $normalize = function ($css) {
       return trim(preg_replace(';\s+;', ' ', $css));
     };
-    $this->assertEquals($normalize(\CCL\cat($expectedCssFile)),
-      $normalize(\CCL\cat($outputCssFile)));
+    $this->assertEquals($normalize(\CCL::cat($expectedCssFile)),
+      $normalize(\CCL::cat($outputCssFile)));
   }
 
   /**
@@ -57,8 +57,8 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
       $css = str_replace(';}', '}', $css);
       return $css;
     };
-    $this->assertEquals($strip(\CCL\cat($expectedCssFile)),
-      $strip(\CCL\cat($outputMinCssFile)));
+    $this->assertEquals($strip(\CCL::cat($expectedCssFile)),
+      $strip(\CCL::cat($outputMinCssFile)));
   }
 
 }

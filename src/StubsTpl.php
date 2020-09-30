@@ -13,11 +13,11 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
-$namespace = 'CCL';
+$outClass = 'CCL';
 $baseClasses = [Filesystem::class => '_sym', \CCL\Functions::class => '_ccl'];
 $useClasses = [IOException::class, FileNotFoundException::class];
 $skipMethods = ['handleError'];
-$outFile = 'stubs-dynamic.php';
+$outFile = 'CCL.php';
 
 $filterSignature = [];
 $filterSignature['copy'] = function ($sig) {
@@ -132,21 +132,22 @@ ob_start();
 printf("<" . "?php\n");
 printf("// AUTO-GENERATED VIA %s\n", __FILE__);
 printf("// If this file somehow becomes invalid (eg when patching CCL), you may safely delete and re-run install.\n");
-printf("namespace %s;\n", $namespace);
-printf("\n");
 
 foreach ($useClasses as $useClass) {
     printf("use %s;\n", $useClass);
 }
 
+printf("\n");
+printf("class %s {\n", $outClass);
+
 foreach ($baseClasses as $baseClass => $singletonFunc) {
   printf("\n");
-  printf("%s", $formatDocBlock("@return $baseClass"));
-  printf("function %s() {\n", $singletonFunc);
-  printf("  static \$singleton = NULL;\n");
-  printf("  \$singleton = \$singleton ?: new \\%s();\n", $baseClass);
-  printf("  return \$singleton;\n");
-  printf("}\n");
+  printf("%s\n", rtrim($indent(2, $formatDocBlock("@return $baseClass"))));
+  printf("  public static function %s() {\n", $singletonFunc);
+  printf("    static \$singleton = NULL;\n");
+  printf("    \$singleton = \$singleton ?: new \\%s();\n", $baseClass);
+  printf("    return \$singleton;\n");
+  printf("  }\n");
 }
 
 foreach ($baseClasses as $baseClass => $singletonFunc) {
@@ -163,16 +164,19 @@ foreach ($baseClasses as $baseClass => $singletonFunc) {
     preg_match(';\n( +);m', $method->getDocComment(), $oldDocSpaces);
 
     printf("\n");
-    printf("%s\n", $indent(1 - strlen($oldDocSpaces[1] ?? ''), $method->getDocComment()));
-    printf("function %s(%s) {\n", $method->getName(), $formatSignature($method->getName(), $method->getParameters()));
+    printf("  %s\n", $indent(3 - strlen($oldDocSpaces[1] ?? ''), $method->getDocComment()));
+    printf("  public static function %s(%s) {\n", $method->getName(), $formatSignature($method->getName(), $method->getParameters()));
     if (preg_match(';@return;', $method->getDocComment())) {
-      printf("  return %s()->%s(%s);\n", $singletonFunc, $method->getName(), $formatPassthru($method->getParameters()));
+      printf("    return self::%s()->%s(%s);\n", $singletonFunc, $method->getName(), $formatPassthru($method->getParameters()));
     } else {
-      printf("  %s()->%s(%s);\n", $singletonFunc, $method->getName(), $formatPassthru($method->getParameters()));
+      printf("    self::%s()->%s(%s);\n", $singletonFunc, $method->getName(), $formatPassthru($method->getParameters()));
     }
-    printf("}\n");
+    printf("  }\n");
   }
 }
+
+printf("\n");
+printf("}\n");
 
 $code = ob_get_contents();
 ob_end_clean();

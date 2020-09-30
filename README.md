@@ -77,9 +77,9 @@ The following script generalizes the example from before -- it maps *any* SCSS f
 corresponding CSS files (`dist/#1.css`). This file-list is passed into `\CCL\Tasks::scss` for processing:
 
 ```php
-\CCL\assertTask();
+\CCL::assertTask();
 
-$files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
+$files = \CCL::globMap('scss/*.scss', 'dist/#1.css', 1);
 \CCL\Tasks::scss([
   'scss-files' => $files,
   'scss-imports' => ['scss']
@@ -119,7 +119,7 @@ from a PHP script.  The following script would extend the pattern, mapping *any*
 corresponding PHP files (`src/Entity/#1.php`):
 
 ```php
-$files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
+$files = \CCL::globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
 \CCL\Tasks::template([
   "tpl-file" => "src/Entity/EntityTemplate.php",
   "tpl-items" => $files,
@@ -135,7 +135,7 @@ convenient to have a default *stop-on-error* behavior, e.g.  throwing exceptions
 [symfony/filesystem](https://symfony.com/doc/current/components/filesystem.html) provides wrappers which throw exceptions.
 But it puts them into a class `Filesystem` which, which requires more boilerplate.
 
-For the most part, `CCL` simply mirrors `symfony/filesystem` using standalone functions in the `CCL` namespace. Compare:
+For the most part, `CCL` simply mirrors `symfony/filesystem` using static methods the `CCL` class. Compare:
 
 ```php
 // PHP Standard Library
@@ -148,7 +148,7 @@ $fs = new \Symfony\Component\Filesystem\Filesystem();
 $fs->copy('old', 'new');
 
 // Quick and dirty
-\CCL\copy('old', 'new');
+\CCL::copy('old', 'new');
 ```
 
 This is more convenient for scripting one-liners - for example, these tasks do simple file operations. If anything
@@ -162,16 +162,16 @@ goes wrong, they raise an exception and stop the compilation process.
         "title": "Smorgasboard of random helpers",
         "run": [
           // Create files and folders
-          "@php-eval \\CCL\\dumpFile('dist/timestamp.txt', date('Y-m-d H:i:s'));",
-          "@php-eval \\CCL\\mkdir('some/other/place');",
+          "@php-eval \\CCL::dumpFile('dist/timestamp.txt', date('Y-m-d H:i:s'));",
+          "@php-eval \\CCL::mkdir('some/other/place');",
 
           // Concatenate a few files
-          "@php-eval \\CCL\\dumpFile('dist/bundle.js', \\CCL\\cat(glob('js/*.js'));",
-          "@php-eval \\CCL\\chdir('css'); \\CCL\\dumpFile('all.css', ['colors.css', 'layouts.css']);",
+          "@php-eval \\CCL::dumpFile('dist/bundle.js', \\CCL::cat(glob('js/*.js'));",
+          "@php-eval \\CCL::chdir('css'); \\CCL::dumpFile('all.css', ['colors.css', 'layouts.css']);",
 
           // If you need reference material from another package...
           "@export TWBS={{pkg:twbs/bootstrap}}",
-          "@php-eval \\CCL\\copy(getenv('TWBS') .'/dist/bootstrap.css', 'web/main.css')"
+          "@php-eval \\CCL::copy(getenv('TWBS') .'/dist/bootstrap.css', 'web/main.css')"
         ]
       }
     ]
@@ -182,8 +182,6 @@ goes wrong, they raise an exception and stop the compilation process.
 The full function list:
 
 ```php
-namespace CCL;
-
 // CCL wrapper functions
 
 function chdir(string $dir);
