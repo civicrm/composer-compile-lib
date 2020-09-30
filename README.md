@@ -216,3 +216,6 @@ function exists($files);
 
 function tempnam($dir, $prefix);
 ```
+
+For more details about each function, see [`CCL\Functions`](src/Functions.php) and
+[symfony/filesystem](https://symfony.com/doc/current/components/filesystem.html).
