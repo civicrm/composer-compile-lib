@@ -7,6 +7,68 @@ if (!isset($GLOBALS['COMPOSER_COMPILE_TASK']) || empty($GLOBALS['COMPOSER_COMPIL
   include_once __DIR__ . '/compile-lib-fs.php';
 }
 
+/**
+ * Array-map function. Similar to array_map(), but tuned to key-value pairs.
+ *
+ * Example:
+ *   $data = [100 => 'apple', 200 => 'banana'];
+ *   $opposite = mapkv($data, function($k, $v){ return [-1 * $k => strtoupper($v)]; });
+ *
+ * This would return [-100 => 'APPLE', -200 => 'BANANA']
+ *
+ * By convention, mapping functions should return an 1-row array "[newKey => newValue]".
+ *
+ * Some unconventional forms are also defined:
+ *  - Return empty array ==> Skip/omit the row
+ *  - Return multiple items ==> Add all items to the result
+ *  - Return an unkeyed (numeric) array ==> Discard original keys. Items are appended numerically (`$arr[] = $value`).
+ *
+ * @param array $array
+ *   Values to iterate over
+ * @param callable $func
+ *   Callback function.
+ *   function(scalar $key, mixed $value): array
+ * @return array
+ *   The filtered array.
+ */
+function mapkv($array, $func) {
+  $r = [];
+  foreach ($array as $k => $v) {
+    foreach ($func($k, $v) as $out_k => $out_v) {
+      if (isset($r[$out_k])) {
+        $r[] = $out_v;
+      }
+      else {
+        $r[$out_k] = $out_v;
+      }
+    }
+  }
+  return $r;
+}
+
+/**
+ * Map file-names.
+ *
+ * @param string $matchPat
+ *   Ex: 'src/*.json'
+ * @param string $outPat
+ *   Ex: 'dest/#1.json'
+ * @param bool $flip
+ *   The orientation of the result map.
+ *   If false, returned as "original => filtered".
+ *   If true, returned as "filtered => original".
+ * @return array
+ *   List of files and the corresponding names.
+ */
+function globMap($matchPat, $outPat, $flip = FALSE) {
+  $inFiles = glob($matchPat);
+  $regex = ';' . preg_quote($matchPat, ';') . ';';
+  $regex = str_replace(preg_quote('*', ';'), '(.*)', $regex);
+  $replacement = preg_replace(';#(\d+);', '\\' . '\\\1', $outPat);
+  $outFiles = preg_replace($regex, $replacement, $inFiles);
+  return $flip ? array_combine($outFiles, $inFiles) : array_combine($inFiles, $outFiles);
+}
+
 function chdir($directory) {
   if (!\chdir($directory)) {
     throw new IOException("Failed to change directory ($directory)");
@@ -14,7 +76,7 @@ function chdir($directory) {
 }
 
 /**
- * @param string|string[] $pat
+ * @param string|string[] $pats
  *   List of glob patterns.
  * @param null|int $flags
  * @return array
