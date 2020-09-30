@@ -72,7 +72,8 @@ can also call the method in a PHP script. For example, we could define a task ba
 }
 ```
 
-The script makes a list of SCSS/CSS files (`globMap(...)`) and passes that to `\CCL\Tasks::scss(...)`:
+The following script generalizes the example from before -- it maps *any* SCSS files (`scss/*.scss`) to
+corresponding CSS files (`dist/#1.css`). This file-list is passed into `\CCL\Tasks::scss` for processing:
 
 ```php
 \CCL\assertTask();
@@ -85,10 +86,13 @@ $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
 ]);
 ```
 
+Note that this implementation of `\CCL\Tasks::scss()` is fairly opinionated - it combines `scssphp` with
+`php-autoprefixer`. The output is written as two files, a larger files (`*.css`) and a smaller file (`*.min.css`).
+
 ## Task: PHP Template
 
-In this example, we use a PHP template (eg [`src/Entity/EntityTemplate.php`](tests/examples/EntityTemplate.php)) to generate a PHP class.
-Specifically, the `Sandwich.php` class will be generated from the [`Sandwich.json`](tests/examples/Sandwich.json) specification.
+In this example, we use a PHP template to generate another PHP file.  Specifically, we create `Sandwich.php` using
+the specification from [`Sandwich.json`](tests/examples/Sandwich.json) and [`EntityTemplate.php`](tests/examples/EntityTemplate.php):
 
 ```javascript
 {
@@ -98,22 +102,20 @@ Specifically, the `Sandwich.php` class will be generated from the [`Sandwich.jso
         "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
         "run": "@php-method \\CCL\\Tasks::template",
         "watch-files": ["src/Entity"],
-        "tpl-file": "src/Entity/EntityTemplate.php",
         "tpl-items": [
           "src/Entity/Sandwich.php": "src/Entity/Sandwich.json",
           "src/Entity/Salad.php": "src/Entity/Salad.json"
         ],
+        "tpl-file": "src/Entity/EntityTemplate.php"
       }
     ]
   }
 }
 ```
 
-It loads the `tpl-file` (`EntityTemplate.php`) and supplies one input (e.g. `$tplData == "src/Entity/Sandwich.json"`).
-The result is written to `src/Entity/Sandwich.php`.
-
 As in the previous example, the task is simply a PHP method (`@php-method \\CCL\\Tasks::template`), so it can be used
-from a PHP script.  This script maps JSON files (`src/Entity/*.json`) to PHP files (`src/Entity/#1.php`):
+from a PHP script.  The following script would extend the pattern, mapping *any* JSON files (`src/Entity/*.json`) to
+corresponding PHP files (`src/Entity/#1.php`):
 
 ```php
 $files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
