@@ -1,4 +1,4 @@
-# CiviCRM Compilation Library
+# CiviCRM Composer Compilation Library
 
 This package provides a handful of small tasks and helpers for use with [composer-compile-plugin](https://github.com/civicrm/composer-compile-plugin).
 
@@ -10,7 +10,7 @@ Design guidelines for this package:
 * To ensure that compilation steps report errors:
     * Every task/function must throw an exception if it doesn't work.
 * To allow pithy tasks:
-    *If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
+    * If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
 
 The primary purpose here is *demonstrative* - to provide examples.  Consequently, it is fairly minimal / lightweight /
 loosely-coupled.  There is no dependency on CiviCRM.  Conversely, CiviCRM packages may define other tasks which are not
@@ -18,7 +18,13 @@ in this library.
 
 ## Require the library
 
-All the examples below require the `civicrm/composer-compile-lib` package.
+All the examples below require the `civicrm/composer-compile-lib` package. Load via CLI:
+
+```bash
+composer require civicrm/composer-compile-lib:'~1.0'
+```
+
+Or via `composer.json`:
 
 ```javascript
   "require": {
@@ -37,7 +43,7 @@ variables from the `./scss/` folder.
     "compile": [
       {
         "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
-        "run": "@php-method \\CCL\\Task::scss",
+        "run": "@php-method \\CCL\\Tasks::scss",
         "watch-files": ["scss"],
         "scss-files": {
           "dist/sandwich.css": "scss/sandwich.scss",
@@ -51,13 +57,13 @@ variables from the `./scss/` folder.
 }
 ```
 
-Note that a "task" simply calls a static PHP method (`@php-method \\CCL\\Task::scss`) with the JSON data as input.  You
+Note that a "task" simply calls a static PHP method (`@php-method \\CCL\\Tasks::scss`) with the JSON data as input.  You
 can also call the method directly.  For example, in this PHP script, we scan the file list (`globMap(...)`) and feed
 that into `scss()`.
 
 ```php
 $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
-\CCL\Task::scss([
+\CCL\Tasks::scss([
   'scss-files' => $files,
   'scss-imports' => ['scss']
   'scss-import-prefixes' => ['LOGICAL_PREFIX/' => 'physical/folder/']
@@ -75,7 +81,7 @@ Specifically, the `Sandwich.php` entity will be generated from the [`Sandwich.js
     "compile": [
       {
         "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
-        "run": "@php-method \\CCL\\Task::template",
+        "run": "@php-method \\CCL\\Tasks::template",
         "watch-files": ["src/Entity"],
         "tpl-file": "src/Entity/EntityTemplate.php",
         "tpl-items": [
@@ -88,15 +94,15 @@ Specifically, the `Sandwich.php` entity will be generated from the [`Sandwich.js
 }
 ```
 
-It loads the `tpl-file` (`EntityTemplate.php`) and suppplies one input (e.g. `$tplData == "src/Entity/Sandwich.json"`).
+It loads the `tpl-file` (`EntityTemplate.php`) and supplies one input (e.g. `$tplData == "src/Entity/Sandwich.json"`).
 The result is written to `src/Entity/Sandwich.php`.
 
-As in the previous example, the task is simply a PHP method (`@php-method \\CCL\\Task::template`), so it can be used
+As in the previous example, the task is simply a PHP method (`@php-method \\CCL\\Tasks::template`), so it can be used
 from a PHP script.  This example maps JSON files (`src/Entity/*.json`) to PHP files (`src/Entity/#1.php`):
 
 ```php
 $files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
-\CCL\Task::template([
+\CCL\Tasks::template([
   "tpl-file" => "src/Entity/EntityTemplate.php",
   "tpl-items" => $files,
 ]);
