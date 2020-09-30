@@ -1,13 +1,17 @@
 # CiviCRM Compilation Library
 
-This is a quick-and-dirty library with some example tasks and helpers for [composer-compile-plugin](https://github.com/civicrm/composer-compile-plugin).
+This package provides a handful of small tasks and helpers for use with [composer-compile-plugin](https://github.com/civicrm/composer-compile-plugin).
 
-Some general values for this repo:
+Design guidelines:
 
 * Use basic functions and static methods to allow easy operation in pre-boot environments.
-* Every task/helper must throw an exception if it doesn't work.
+* Every task/function must throw an exception if it doesn't work.
 * If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
-* Feel free to copy/hack/etc. If you re-publish, please use a different name+namespace to allow coexistence.
+
+It aims to support CiviCRM-related packages, but it is loosely coupled, so:
+
+* CiviCRM-related packages can have compilation tasks which don't use any of these helpers.
+* Other projects can use these helpers without CiviCRM.
 
 ## Require the library
 
@@ -19,7 +23,10 @@ All the examples below require the `civicrm/composer-compile-lib` package.
   }
 ```
 
-## Task: SCSS
+## Task: SCSS => CSS
+
+In this example, we evaluate a file `scss/whizbang.scss` and write to `dist/whizbang.css`.  The file may `@import`
+mixins and variables from the `./scss/` folder.
 
 ```javascript
 {
@@ -38,7 +45,22 @@ All the examples below require the `civicrm/composer-compile-lib` package.
 }
 ```
 
-## Task: Meta-PHP
+The task is simply a PHP method, so it can be invoked from a PHP script.  In this PHP script, we get a list of SCSS
+files (`globMap(...)`) and feed that into `scss()`.
+
+```php
+$files = \CCL\globMap('scss/*.scss', 'dist/#1.css')
+\CCL\Task::scss([
+  'scss-files' => $files,
+  'scss-imports' => ['scss']
+  'scss-import-prefixes' => ['LOGICAL_PREFIX/' => 'physical/folder']
+]);
+```
+
+## Task: JSON => PHP
+
+In this example, we generate a PHP entity-class (`src/Entity/Sandwich.php`) using a JSON specification
+(`src/Entity/Sandwich.json`). The file `src/Entity/EntityTemplate.php` provides a template.
 
 ```javascript
 {
@@ -46,16 +68,27 @@ All the examples below require the `civicrm/composer-compile-lib` package.
     "compile": [
       {
         "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
-        "run": "@php-method \\CCL\\Task::metaphp",
-        "watch-files": ["src/tpl"],
-        "metaphp-tpl": "src/tpl/class.php",
-        "metaphp-data": "src/tpl/Sandwich.json",
-        "metaphp-out": "src/Sandwich.php"
+        "run": "@php-method \\CCL\\Task::jsonphp",
+        "watch-files": ["src/Entity"],
+        "jsonphp-template": "src/Entity/EntityTemplate.php",
+        "jsonphp-files": ["src/Entity/Sandwich.json": "src/Entity/Sandwich.php"],
       }
     ]
   }
 }
+```
 
+Again, the task is simply a PHP method, so it can be used from a PHP script.  This example maps all entity JSON files:
+
+```php
+namespace CCL;
+foreach(globMap('src/Entity/*.json', 'src/Entity/#1.php') as $inFile => $outFile)
+  \CCL\Task::jsonphp([
+    "jsonphp-template" => "src/Entity/entity.php",
+    "jsonphp-files" => [$inJsonFile => $outPhpFile],
+  ]);
+}
+```
 
 ## Functions
 
@@ -115,13 +148,18 @@ The full function list:
 ```php
 namespace CCL;
 
-// CCL wrappers
+// CCL wrapper functions
 
 function chdir(string $dir);
 function glob($pat, $flags = null);
 function cat($files);
 
-// Symfony wrappers
+// CCL distinct functions
+
+function mapkv($array, $func);
+funciton globMap($globPat, $mapPat, $flip = false);
+
+// Symfony wrapper functions
 
 function appendToFile($filename, $content);
 function dumpFile($filename, $content);
