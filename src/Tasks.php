@@ -9,19 +9,19 @@ class Tasks {
   /**
    * Generate SCSS files.
    *
-   * @see \CCL\Scss::compile
+   * @see \CCL\Tasks\Scss::compile
    */
   public static function scss(array $tasks) {
     \CCL\Tasks\Scss::compile($tasks);
   }
 
   /**
-   * Generate SCSS files.
+   * Generate PHP files using JSON templates.
    *
-   * @see \CCL\Scss::compile
+   * @see \CCL\Tasks\JsonPhp::compile
    */
-  public static function metaphp(array $tasks) {
-    \CCL\Tasks\MetaPhp::compile($tasks);
+  public static function jsonPhp(array $tasks) {
+    \CCL\Tasks\JsonPhp::compile($tasks);
   }
 
 }

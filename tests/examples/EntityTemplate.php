@@ -12,15 +12,15 @@ $funcName = function ($action, $fieldName) {
     return $action . ucfirst($fieldName);
 };
 
-global $metaphp;
+global $json;
 
 echo "<" . "?php\n";
-printf("namespace %s;\n\n", $metaphp->namespace);
-printf("class %s\n{\n", $metaphp->class);
+printf("namespace %s;\n\n", $json->namespace);
+printf("class %s\n{\n", $json->class);
 
-//list ($firstField) = array_shift(array_keys($metaphp->fields));
+//list ($firstField) = array_shift(array_keys($json->fields));
 $first = true;
-foreach ($metaphp->fields as $fieldName => $fieldType) {
+foreach ($json->fields as $fieldName => $fieldType) {
     if ($first) {
         $first = false;
     } else {
@@ -32,7 +32,7 @@ foreach ($metaphp->fields as $fieldName => $fieldType) {
     printf("    protected \$%s;\n", $fieldName);
 }
 
-foreach ($metaphp->fields as $fieldName => $fieldType) {
+foreach ($json->fields as $fieldName => $fieldType) {
     $literalType = strpos($fieldType, '[]') === false ? $fieldType : 'array';
 
     printf("\n");
@@ -45,7 +45,7 @@ foreach ($metaphp->fields as $fieldName => $fieldType) {
     printf("    }\n");
 }
 
-foreach ($metaphp->fields as $fieldName => $fieldType) {
+foreach ($json->fields as $fieldName => $fieldType) {
     $literalType = strpos($fieldType, '[]') === false ? $fieldType : 'array';
 
     printf("\n");
@@ -58,4 +58,4 @@ foreach ($metaphp->fields as $fieldName => $fieldType) {
     printf("    }\n");
 }
 
-printf("}\n", $metaphp->class);
+printf("}\n", $json->class);
