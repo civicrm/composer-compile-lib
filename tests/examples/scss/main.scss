@@ -1,2 +1,3 @@
 html { color: red; }
+@import "EXTRA/bar";
 div { @import "foo"; }

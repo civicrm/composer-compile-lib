@@ -41,7 +41,7 @@ variables from the `./scss/` folder.
           "dist/salad.css": "scss/salad.scss"
         },
         "scss-imports": ["scss"]
-        "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder"}
+        "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder/"}
       }
     ]
   }
@@ -56,7 +56,7 @@ $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
 \CCL\Task::scss([
   'scss-files' => $files,
   'scss-imports' => ['scss']
-  'scss-import-prefixes' => ['LOGICAL_PREFIX/' => 'physical/folder']
+  'scss-import-prefixes' => ['LOGICAL_PREFIX/' => 'physical/folder/']
 ]);
 ```
 

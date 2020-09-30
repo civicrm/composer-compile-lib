@@ -8,6 +8,7 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
     \CCL\Tasks::scss([
       'scss-files' => [$this->exampleDir('output.css') => $this->exampleDir('main.scss')],
       'scss-imports' => ['tests/examples/scss'],
+      'scss-import-prefixes' => ['EXTRA/' => dirname($this->exampleDir()) . '/scss-extra/'],
     ]);
 
     $this->assertTrue(file_exists($this->exampleDir('output.css')));
@@ -20,6 +21,7 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
     \CCL\Tasks::scss([
       'scss-files' => \CCL\globMap($this->exampleDir('*.scss'), $this->exampleDir('dist/#1.css'), 1),
       'scss-imports' => ['tests/examples/scss'],
+      'scss-import-prefixes' => ['EXTRA/' => dirname($this->exampleDir()) . '/scss-extra/'],
     ]);
 
     $this->assertTrue(file_exists($this->exampleDir('dist/main.css')));

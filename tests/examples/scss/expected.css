@@ -3,6 +3,10 @@ html {
     color: red;
 }
 
+p {
+    color: blue;
+}
+
 div .foo {
         -ms-hyphens: auto;
         -moz-hyphens: auto;
