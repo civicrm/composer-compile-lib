@@ -1,18 +1,19 @@
 <?php
 /**
- * This template expects the following inputs:
+ * This template expects the input `$tplData`, which should be the name of the JSON data-file.
+ * The file specifies:
  *
- * namespace: string
- * class: string
- * fields: array (string $fieldName => string $type)
+ * - namespace: string
+ * - class: string
+ * - fields: array (string $fieldName => string $type)
  */
 namespace CCL\Tests\Examples;
+
+$json = json_decode(\CCL\cat($GLOBALS['tplData']));
 
 $funcName = function ($action, $fieldName) {
     return $action . ucfirst($fieldName);
 };
-
-global $json;
 
 echo "<" . "?php\n";
 printf("namespace %s;\n\n", $json->namespace);

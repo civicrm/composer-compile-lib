@@ -23,10 +23,10 @@ All the examples below require the `civicrm/composer-compile-lib` package.
   }
 ```
 
-## Task: SCSS => CSS
+## Task: SCSS
 
-In this example, we evaluate a file `scss/whizbang.scss` and write to `dist/whizbang.css`.  The file may `@import`
-mixins and variables from the `./scss/` folder.
+In this example, we generate a file `dist/sandwich.css` by reading `scss/sandwich.scss`.  The file may `@import` mixins and
+variables from the `./scss/` folder.
 
 ```javascript
 {
@@ -36,7 +36,10 @@ mixins and variables from the `./scss/` folder.
         "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
         "run": "@php-method \\CCL\\Task::scss",
         "watch-files": ["scss"],
-        "scss-files": {"dist/whizbang.css": "scss/whizbang.scss"},
+        "scss-files": {
+          "dist/sandwich.css": "scss/sandwich.scss",
+          "dist/salad.css": "scss/salad.scss"
+        },
         "scss-imports": ["scss"]
         "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder"}
       }
@@ -57,10 +60,10 @@ $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
 ]);
 ```
 
-## Task: JSON => PHP
+## Task: PHP Template
 
-In this example, we generate a PHP entity-class (`src/Entity/Sandwich.php`) using a JSON specification
-(`src/Entity/Sandwich.json`). The file `src/Entity/EntityTemplate.php` provides a template.
+In this example, we use a PHP template (eg [`src/Entity/EntityTemplate.php`](tests/examples/EntityTemplate.php)) to generate a PHP class.
+Specifically, the `Sandwich.php` entity will be generated from the [`Sandwich.json`](tests/examples/Sandwich.json) specification.
 
 ```javascript
 {
@@ -68,27 +71,31 @@ In this example, we generate a PHP entity-class (`src/Entity/Sandwich.php`) usin
     "compile": [
       {
         "title": "Sandwich (<comment>src/Sandwich.php</comment>)",
-        "run": "@php-method \\CCL\\Task::jsonphp",
+        "run": "@php-method \\CCL\\Task::template",
         "watch-files": ["src/Entity"],
-        "jsonphp-template": "src/Entity/EntityTemplate.php",
-        "jsonphp-files": ["src/Entity/Sandwich.json": "src/Entity/Sandwich.php"],
+        "tpl-file": "src/Entity/EntityTemplate.php",
+        "tpl-items": [
+          "src/Entity/Sandwich.php": "src/Entity/Sandwich.json",
+          "src/Entity/Salad.php": "src/Entity/Salad.json"
+        ],
       }
     ]
   }
 }
 ```
 
-Again, the task is simply a PHP method, so it can be used from a PHP script.  This example maps all entity JSON files:
+Again, the task is simply a PHP method, so it can be used from a PHP script.  This example maps all JSON files to PHP files:
 
 ```php
-namespace CCL;
-foreach(globMap('src/Entity/*.json', 'src/Entity/#1.php') as $inFile => $outFile)
-  \CCL\Task::jsonphp([
-    "jsonphp-template" => "src/Entity/entity.php",
-    "jsonphp-files" => [$inJsonFile => $outPhpFile],
-  ]);
-}
+$files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
+\CCL\Task::template([
+  "tpl-file" => "src/Entity/EntityTemplate.php",
+  "tpl-items" => $files,
+]);
 ```
+
+In either case, it loads the `tpl-file` (`EntityTemplate.php`).  The template receives one input (e.g. `$tplData ==
+"src/Entity/Sandwich.json"`).
 
 ## Functions
 

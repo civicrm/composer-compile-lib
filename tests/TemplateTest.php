@@ -1,14 +1,14 @@
 <?php
 namespace CCL\Tests;
 
-class JsonPhpTest extends \PHPUnit\Framework\TestCase {
+class TemplateTest extends \PHPUnit\Framework\TestCase {
 
   public function testSandwich() {
     \CCL\remove($this->exampleDir('Sandwich.php'));
     $this->assertFalse(class_exists('\Example\Deli\Sandwich'));
-    \CCL\Tasks::jsonPhp([
-      'jsonphp-template' => $this->exampleDir('EntityTemplate.php'),
-      'jsonphp-files' => [$this->exampleDir('Sandwich.json') => $this->exampleDir('Sandwich.php')],
+    \CCL\Tasks::template([
+      'tpl-file' => $this->exampleDir('EntityTemplate.php'),
+      'tpl-items' => [$this->exampleDir('Sandwich.php') => $this->exampleDir('Sandwich.json')],
     ]);
 
     $this->assertTrue(file_exists($this->exampleDir('Sandwich.php')));

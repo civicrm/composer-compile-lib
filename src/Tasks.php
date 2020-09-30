@@ -18,10 +18,10 @@ class Tasks {
   /**
    * Generate PHP files using JSON templates.
    *
-   * @see \CCL\Tasks\JsonPhp::compile
+   * @see \CCL\Tasks\Template::compile
    */
-  public static function jsonPhp(array $tasks) {
-    \CCL\Tasks\JsonPhp::compile($tasks);
+  public static function template(array $tasks) {
+    \CCL\Tasks\Template::compile($tasks);
   }
 
 }
