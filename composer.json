@@ -31,7 +31,7 @@
             {
                 "title": "Generate <comment>CCL</comment> wrapper functions",
                 "run": ["@php-script src/StubsTpl.php"],
-                "watch-files": ["src/StubsTpl.php", "stubs-loader.php"],
+                "watch-files": ["src/StubsTpl.php", "src/Functions.php", "stubs-loader.php"],
                 "-ccl-task": true
             }
         ]
