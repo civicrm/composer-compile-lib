@@ -131,6 +131,7 @@ ob_start();
 
 printf("<" . "?php\n");
 printf("// AUTO-GENERATED VIA %s\n", __FILE__);
+printf("// If this file somehow becomes invalid (eg when patching CCL), you may safely delete and re-run install.\n");
 printf("namespace %s;\n", $namespace);
 printf("\n");
 
