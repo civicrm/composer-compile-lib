@@ -2,16 +2,19 @@
 
 This package provides a handful of small tasks and helpers for use with [composer-compile-plugin](https://github.com/civicrm/composer-compile-plugin).
 
-Design guidelines:
+Design guidelines for this package:
 
-* Use basic functions and static methods to allow easy operation in pre-boot environments.
-* Every task/function must throw an exception if it doesn't work.
-* If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
+* To ensure easy operation in a new/unbooted system:
+    * Use basic functions and static methods
+    * Use primitive data sources (such as static JSON files)
+* To ensure that compilation steps report errors:
+    * Every task/function must throw an exception if it doesn't work.
+* To allow pithy tasks:
+    *If a task is outputting to a folder, and if the folder doesn't exist, then it should auto-create the folder.
 
-It aims to support CiviCRM-related packages, but it is loosely coupled, so:
-
-* CiviCRM-related packages can have compilation tasks which don't use any of these helpers.
-* Other projects can use these helpers without CiviCRM.
+The primary purpose here is *demonstrative* - to provide examples.  Consequently, it is fairly minimal / lightweight /
+loosely-coupled.  There is no dependency on CiviCRM.  Conversely, CiviCRM packages may define other tasks which are not
+in this library.
 
 ## Require the library
 
@@ -48,8 +51,9 @@ variables from the `./scss/` folder.
 }
 ```
 
-The task is simply a PHP method, so it can be invoked from a PHP script.  In this PHP script, we get a list of SCSS
-files (`globMap(...)`) and feed that into `scss()`.
+Note that a "task" simply calls a static PHP method (`@php-method \\CCL\\Task::scss`) with the JSON data as input.  You
+can also call the method directly.  For example, in this PHP script, we scan the file list (`globMap(...)`) and feed
+that into `scss()`.
 
 ```php
 $files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
@@ -84,7 +88,11 @@ Specifically, the `Sandwich.php` entity will be generated from the [`Sandwich.js
 }
 ```
 
-Again, the task is simply a PHP method, so it can be used from a PHP script.  This example maps all JSON files to PHP files:
+It loads the `tpl-file` (`EntityTemplate.php`) and suppplies one input (e.g. `$tplData == "src/Entity/Sandwich.json"`).
+The result is written to `src/Entity/Sandwich.php`.
+
+As in the previous example, the task is simply a PHP method (`@php-method \\CCL\\Task::template`), so it can be used
+from a PHP script.  This example maps JSON files (`src/Entity/*.json`) to PHP files (`src/Entity/#1.php`):
 
 ```php
 $files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
@@ -94,14 +102,11 @@ $files = \CCL\globMap('src/Entity/*.json', 'src/Entity/#1.php', 1);
 ]);
 ```
 
-In either case, it loads the `tpl-file` (`EntityTemplate.php`).  The template receives one input (e.g. `$tplData ==
-"src/Entity/Sandwich.json"`).
-
 ## Functions
 
 PHP's standard library has a lot of functions that would work for basic file manipulation (`copy()`, `rename()`, `chdir()`, etc).  The
-problem is error-signaling -- you have to explicitly check error-output, and this grows cumbersome with improvised glue code.  It's more
-convenient to have a default 'stop-on-error' behavior, e.g.  throwing exceptions.
+problem is error-signaling -- you have to explicitly check error-output, and this grows cumbersome for improvised glue code.  It's more
+convenient to have a default *stop-on-error* behavior, e.g.  throwing exceptions.
 
 [symfony/filesystem](https://symfony.com/doc/current/components/filesystem.html) provides wrappers which throw exceptions.
 But it puts them into a class `Filesystem` which, which requires more boilerplate.
