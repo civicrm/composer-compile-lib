@@ -135,7 +135,7 @@ convenient to have a default *stop-on-error* behavior, e.g.  throwing exceptions
 [symfony/filesystem](https://symfony.com/doc/current/components/filesystem.html) provides wrappers which throw exceptions.
 But it puts them into a class `Filesystem` which, which requires more boilerplate.
 
-For the most part, `CCL` simply mirrors `symfony/filesystem` using static methods the `CCL` class. Compare:
+For the most part, `CCL` simply mirrors `symfony/filesystem` using static methods in the `CCL` class. Compare:
 
 ```php
 // PHP Standard Library
@@ -147,11 +147,11 @@ if (!copy('old', 'new')) {
 $fs = new \Symfony\Component\Filesystem\Filesystem();
 $fs->copy('old', 'new');
 
-// Quick and dirty
+// Composer Compile Library
 \CCL::copy('old', 'new');
 ```
 
-This is more convenient for scripting one-liners - for example, these tasks do simple file operations. If anything
+This is more convenient for scripting one-liners. For example, the following tasks do simple file operations. If anything
 goes wrong, they raise an exception and stop the compilation process.
 
 ```javascript
