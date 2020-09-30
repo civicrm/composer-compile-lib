@@ -21,14 +21,14 @@ in this library.
 All the examples below require the `civicrm/composer-compile-lib` package. Load via CLI:
 
 ```bash
-composer require civicrm/composer-compile-lib:'~1.0'
+composer require civicrm/composer-compile-lib:'~0.2'
 ```
 
 Or via `composer.json`:
 
 ```javascript
   "require": {
-    "civicrm/composer-compile-lib": "~1.0"
+    "civicrm/composer-compile-lib": "~0.2"
   }
 ```
 
