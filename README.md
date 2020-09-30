@@ -164,7 +164,7 @@ function cat($files);
 // CCL distinct functions
 
 function mapkv($array, $func);
-funciton globMap($globPat, $mapPat, $flip = false);
+function globMap($globPat, $mapPat, $flip = false);
 
 // Symfony wrapper functions
 
