@@ -60,7 +60,8 @@ variables from the `./scss/` folder.
 Note that a "task" simply calls a static PHP method (`@php-method \\CCL\\Tasks::scss`) with the JSON data as input.  You
 can also call the method in a PHP script. For example, we could define a task based on a script:
 
-```javascript{
+```javascript
+{
   "extra": {
     "compile": [
       {
