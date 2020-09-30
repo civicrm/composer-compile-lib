@@ -14,7 +14,8 @@ class Scss {
    *   - scss-imports: string[], list of paths with SCSS helper files
    *   - scss-import-prefixes: array, key-value mapping where keys are "logical file prefixes" and values are file-paths
    *   - scss-includes: string[], an alias for 'scss-imports'
-   *   - scss-files: array, key-value mapping with input-files and output-files
+   *   - scss-files: array, list of files to generate and their inputs
+   *     Ex: ['generatedFile.css': 'sourceFile.scss']
    *
    * @link https://github.com/civicrm/composer-compile-plugin/blob/master/doc/tasks.md
    */
@@ -34,7 +35,7 @@ class Scss {
     if (empty($task['scss-files'])) {
       throw new \InvalidArgumentException("Invalid task: required argument 'scss-files' is missing");
     }
-    foreach ($task['scss-files'] as $inputFile => $outputFile) {
+    foreach ($task['scss-files'] as $outputFile => $inputFile) {
       if (!file_exists($inputFile)) {
         throw new \InvalidArgumentException("File does not exist: " . $inputFile);
       }

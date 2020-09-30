@@ -36,7 +36,7 @@ mixins and variables from the `./scss/` folder.
         "title": "Whizbang CSS (<comment>dist/whizbang.css</comment>)",
         "run": "@php-method \\CCL\\Task::scss",
         "watch-files": ["scss"],
-        "scss-files": {"scss/whizbang.scss": "dist/whizbang.css"},
+        "scss-files": {"dist/whizbang.css": "scss/whizbang.scss"},
         "scss-imports": ["scss"]
         "scss-import-prefixes": {"LOGICAL_PREFIX/": "physical/folder"}
       }
@@ -49,7 +49,7 @@ The task is simply a PHP method, so it can be invoked from a PHP script.  In thi
 files (`globMap(...)`) and feed that into `scss()`.
 
 ```php
-$files = \CCL\globMap('scss/*.scss', 'dist/#1.css')
+$files = \CCL\globMap('scss/*.scss', 'dist/#1.css', 1);
 \CCL\Task::scss([
   'scss-files' => $files,
   'scss-imports' => ['scss']

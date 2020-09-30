@@ -6,7 +6,7 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
   public function testScss() {
     \CCL\remove($this->exampleDir('output.css'));
     \CCL\Tasks::scss([
-      'scss-files' => [$this->exampleDir('main.scss') => $this->exampleDir('output.css')],
+      'scss-files' => [$this->exampleDir('output.css') => $this->exampleDir('main.scss')],
       'scss-imports' => ['tests/examples/scss'],
     ]);
 
@@ -18,7 +18,7 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
   public function testScssGlobMap() {
     \CCL\remove($this->exampleDir('output.css'));
     \CCL\Tasks::scss([
-      'scss-files' => \CCL\globMap($this->exampleDir('*.scss'), $this->exampleDir('dist/#1.css')),
+      'scss-files' => \CCL\globMap($this->exampleDir('*.scss'), $this->exampleDir('dist/#1.css'), 1),
       'scss-imports' => ['tests/examples/scss'],
     ]);
 
@@ -26,7 +26,6 @@ class ScssTest extends \PHPUnit\Framework\TestCase {
     $this->assertSameCss($this->exampleDir('expected.css'), $this->exampleDir('dist/main.css'));
     $this->assertSameMinCss($this->exampleDir('expected.css'), $this->exampleDir('dist/main.min.css'));
   }
-
 
   protected function exampleDir($name = NULL) {
     // For this task, file paths are relative to cwd.
