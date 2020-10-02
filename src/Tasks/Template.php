@@ -1,6 +1,9 @@
 <?php
 namespace CCL\Tasks;
 
+use CCL\ErrorBuffer;
+use Symfony\Component\Filesystem\Filesystem;
+
 class Template {
 
   /**
@@ -17,19 +20,36 @@ class Template {
   public static function compile(array $task) {
     self::assertFileField($task, 'tpl-file');
 
-    global $tplData;
-    $backup = $tplData;
-
     foreach ($task['tpl-items'] as $outputFile => $inputData) {
-      $tplData = $inputData;
-      ob_start();
-      require $task['tpl-file'];
-      $outputContent = ob_get_contents();
-      ob_end_clean();
-      \CCL::dumpFile($outputFile, $outputContent);
-    }
+      $errorBuffer = ErrorBuffer::create()->start();
 
-    $tplData = $backup;
+      ob_start();
+      try {
+        static::runFile($task['tpl-file'], ['tplData' => $inputData]);
+      } finally {
+        $outputData = ob_get_contents();
+        ob_end_clean();
+        $errorBuffer->stop();
+        foreach ($errorBuffer->getLines() as $error) {
+          fwrite(STDERR, "$error\n");
+        }
+      }
+
+      if ($errorBuffer->isFatal()) {
+        throw new \RuntimeException("Fatal template error");
+      }
+
+      // Note: 'Template' is used internally to build CCL.php, so don't call CCL::dumpFile().
+      (new Filesystem())->dumpFile($outputFile, $outputData);
+
+      unset($outputData);
+      unset($errorBuffer);
+    }
+  }
+
+  protected static function runFile($_tplFile, $_tplVars) {
+    extract($_tplVars);
+    require $_tplFile;
   }
 
   /**
