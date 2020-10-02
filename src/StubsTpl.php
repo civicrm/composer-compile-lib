@@ -17,7 +17,6 @@ $outClass = 'CCL';
 $baseClasses = [Filesystem::class => '_sym', \CCL\Functions::class => '_ccl'];
 $useClasses = [IOException::class, FileNotFoundException::class];
 $skipMethods = ['handleError'];
-$outFile = 'CCL.php';
 
 $filterSignature = [];
 $filterSignature['copy'] = function ($sig) {
@@ -127,8 +126,6 @@ $formatDocBlock = function ($text) {
 ####################################################################################
 ## Main
 
-ob_start();
-
 printf("<" . "?php\n");
 printf("// AUTO-GENERATED VIA %s\n", __FILE__);
 printf("// If this file somehow becomes invalid (eg when patching CCL), you may safely delete and re-run install.\n");
@@ -177,7 +174,3 @@ foreach ($baseClasses as $baseClass => $singletonFunc) {
 
 printf("\n");
 printf("}\n");
-
-$code = ob_get_contents();
-ob_end_clean();
-file_put_contents($outFile, $code);

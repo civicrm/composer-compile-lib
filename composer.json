@@ -32,7 +32,9 @@
         "compile": [
             {
                 "title": "Generate <comment>CCL</comment> wrapper functions",
-                "run": ["@php-script src/StubsTpl.php"],
+                "run": ["@php-method \\CCL\\Tasks::template"],
+                "tpl-file": "src/StubsTpl.php",
+                "tpl-items": {"CCL.php": true},
                 "watch-files": ["src/StubsTpl.php", "src/Functions.php"]
             }
         ]
