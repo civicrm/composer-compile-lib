@@ -70,7 +70,7 @@ $formatSignature = function ($name, $params) use ($export, $filterSignature) {
   }
   $sig = implode(', ', $sigs);
 
-  if ($filterSignature[$name]) {
+  if (isset($filterSignature[$name])) {
       $sig = call_user_func($filterSignature[$name], $sig);
   }
   return $sig;
