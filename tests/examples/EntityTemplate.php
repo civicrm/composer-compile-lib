@@ -9,7 +9,7 @@
  */
 namespace CCL\Tests\Examples;
 
-$json = json_decode(\CCL::cat($GLOBALS['tplData']));
+$json = json_decode(\CCL::cat($tplData));
 
 $funcName = function ($action, $fieldName) {
     return $action . ucfirst($fieldName);
