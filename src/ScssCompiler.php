@@ -42,7 +42,7 @@ class ScssCompiler extends \ScssPhp\ScssPhp\Compiler {
       }
     }
 
-    return parent::findImport($url);
+    return parent::findImport($url, $currentDir);
   }
 
   public function addImportPrefix(string $prefix, string $path) {

@@ -24,7 +24,7 @@
     "require": {
         "civicrm/composer-compile-plugin": "~0.9 || ~1.0",
         "symfony/filesystem": "~2.8 || ~3.4 || ~4.0 || ~5.0",
-        "scssphp/scssphp": "~1.2",
+        "scssphp/scssphp": "~1.5",
         "padaliyajay/php-autoprefixer": "~1.2",
         "tubalmartin/cssmin": "^4.1"
     },
