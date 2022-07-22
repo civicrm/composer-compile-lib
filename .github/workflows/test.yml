@@ -27,4 +27,5 @@ jobs:
           php-version: ${{ matrix.php }}
       - name: Validate composer.json and composer.lock
         run: composer validate
-      - run: ./scripts/test.sh
+      - run: bash ./scripts/test.sh
+        ## Specify bash interpreter to ensure it runs on all platforms.
