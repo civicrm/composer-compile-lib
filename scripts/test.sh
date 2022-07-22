@@ -19,6 +19,6 @@ PHPUNIT_BIN="$PHPUNIT_DIR/phpunit"
 [ ! -f "$PHPUNIT_BIN" ] && ( mkdir -p "$PHPUNIT_DIR" ; curl -L "$PHPUNIT_URL" -o "$PHPUNIT_BIN" )
 
 pushd "$PRJDIR" >> /dev/null
-  composer install --prefer-dist --no-progress --no-suggest --no-dev
+  composer install --prefer-dist --no-progress --no-suggest --no-dev --no-interaction
   php "$PHPUNIT_BIN"
 popd >> /dev/null
